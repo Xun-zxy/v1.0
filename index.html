@@ -686,7 +686,7 @@ window.onload = wrap_img;
 
 <!-- 等待封面图片加载再展示页面 - preload -->
 <style>
-  /* 全屏预加载遮罩 */
+  /* 全屏预加载遮罩（白底） */
   #preloader {
     position: fixed;
     inset: 0;
@@ -694,7 +694,7 @@ window.onload = wrap_img;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000; /* 可用与图片配色一致的颜色 */
+    background: #fff; /* 改为白底 */
     transition: opacity .45s ease, visibility .45s;
     opacity: 1;
     visibility: visible;
@@ -705,16 +705,20 @@ window.onload = wrap_img;
     visibility: hidden;
     pointer-events: none;
   }
-  /* 可选：简单 spinner */
-  #preloader .spinner {
-    width: 56px;
-    height: 56px;
-    border-radius: 999px;
-    border: 5px solid rgba(255,255,255,0.12);
-    border-top-color: rgba(255,255,255,0.9);
-    animation: spin 1s linear infinite;
+  /* 使用 svg 图（居中、大小可调） */
+  #preloader img#preloader-svg {
+    width: 120px;
+    height: 120px;
+    display: block;
+    object-fit: contain;
+    /* 可加一点动画效果（非必须）*/
+    animation: preloader-pulse 1.2s linear infinite;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes preloader-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.03); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 </style>
 
 </head>
@@ -722,7 +726,8 @@ window.onload = wrap_img;
 
 <!-- 页面进入前的遮罩：等 hero 图片加载完再 fade out -->
 <div id="preloader" aria-hidden="false">
-  <div class="spinner" aria-hidden="true"></div>
+  <!-- 使用 loading.svg 循环播放（JS 会周期性重载以保证动画/播放重置） -->
+  <img id="preloader-svg" src="./images/loading.svg" alt="loading" aria-hidden="true">
 </div>
 
 <!-- 文档流中的全屏 hero：图片 + 文字层（打开页面时可见，向下滚动会离开） -->
@@ -748,15 +753,34 @@ window.onload = wrap_img;
     const TIMEOUT_MS = 6000;
     const preloader = document.getElementById('preloader');
     const heroImg = document.querySelector('.site-hero img');
+
+    // 周期性刷新 preloader-svg 的 src，确保 svg 内部动画重复播放
+    let svgReloadInterval = null;
+    const startSvgReload = () => {
+      const el = document.getElementById('preloader-svg');
+      if (!el) return;
+      svgReloadInterval = setInterval(() => {
+        // 通过添加时间戳强制浏览器重新请求，触发 svg 动画重播
+        el.src = './images/loading.svg?t=' + Date.now();
+      }, 900); // 900ms 可根据 svg 动画时长调整
+    };
+    const stopSvgReload = () => {
+      if (svgReloadInterval) { clearInterval(svgReloadInterval); svgReloadInterval = null; }
+    };
+    // 启动循环重播
+    startSvgReload();
+
     if (!preloader || !heroImg) {
       // 找不到元素：移除 preloader 防止卡死
-      preloader && preloader.classList.add('hidden');
+      preloader && (preloader.classList.add('hidden'), stopSvgReload());
       return;
     }
     let done = false;
     function reveal() {
       if (done) return; done = true;
       preloader.classList.add('hidden');
+      // 停止 svg 循环
+      stopSvgReload();
       // 小延迟后彻底移除（让过渡完成）
       setTimeout(() => preloader.remove(), 600);
     }
