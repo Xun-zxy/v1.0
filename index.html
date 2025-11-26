@@ -741,6 +741,36 @@ window.onload = wrap_img;
     </div>
   </div>
 </section>
+
+<script>
+  // 等待 hero 图片加载完才移除 preloader（或 6s 超时后强制移除）
+  (function () {
+    const TIMEOUT_MS = 6000;
+    const preloader = document.getElementById('preloader');
+    const heroImg = document.querySelector('.site-hero img');
+    if (!preloader || !heroImg) {
+      // 找不到元素：移除 preloader 防止卡死
+      preloader && preloader.classList.add('hidden');
+      return;
+    }
+    let done = false;
+    function reveal() {
+      if (done) return; done = true;
+      preloader.classList.add('hidden');
+      // 小延迟后彻底移除（让过渡完成）
+      setTimeout(() => preloader.remove(), 600);
+    }
+    // 已加载（缓存）时直接 reveal
+    if (heroImg.complete && heroImg.naturalWidth > 0) {
+      reveal();
+    } else {
+      heroImg.addEventListener('load', reveal, { once: true });
+      heroImg.addEventListener('error', reveal, { once: true }); // 出错也不阻塞
+      // 兜底：超时强制显示
+      setTimeout(reveal, TIMEOUT_MS);
+    }
+  })();
+</script>
   
   <div id="MathJax_Message" style="display: none;"></div><header class="site-header">
 
