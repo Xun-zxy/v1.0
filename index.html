@@ -696,8 +696,9 @@ window.onload = wrap_img;
 </head>
 <body>
 <!-- 顶部全屏图片（在文档流里，会被向上滚出，滚动进入正文） -->
-<div class="hero-fullscreen" aria-hidden="true"></div>
-  <div class="hero-overlay" aria-hidden="true"></div>
+<section class="site-hero" aria-hidden="false">
+  <img src="images/cover.jpg" alt="封面图 — 替换为你的图片路径">
+</section>
 <!-- 新增：在图片之上展示的可滚动文案区（打开页面时可见，向下滚动进入正文） -->
 <section class="cover-top" aria-hidden="false">
   <div class="cover-text" role="banner">
