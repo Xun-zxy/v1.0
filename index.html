@@ -623,68 +623,58 @@ window.onload = wrap_img;
 #MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
 #MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
 </style>
-  <style>
-    /* 全屏背景层（固定）*/
-    .hero-fullscreen {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100vh;
-      background-image: url('images/cover.jpg'); /* 替换为你的图片路径或 URL */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      z-index: -1; /* 在页面内容下方 */
-    }
-    /* 可选：半透明遮罩，增强可读性 */
-    .hero-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 0;
-      pointer-events: none;
-    }
-  /* 顶部文案区 —— 在图片之上、页面流中，占据一个视口高度，向下滚动进入正文 */
-  .cover-top {
-    position: relative;     /* 在文档流中，不固定，滚动会离开 */
-    z-index: 2;             /* 高于 overlay，低于 header（site-header 已有 z-index:5）*/
-    width: 100%;
-    height: 100vh;          /* 占满第一个视口，高度可改 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  .cover-top .cover-text {
-    max-width: 1100px;
-    width: calc(100% - 48px);
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    padding: 36px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 12px 40px rgba(0,0,0,.45);
-    backdrop-filter: blur(2px);
-  }
-  .cover-top .cover-text h1 {
-    margin: 0 0 12px;
-    font-size: clamp(26px, 4vw, 48px);
-    line-height: 1.05;
-    text-shadow: 0 0 8px rgba(0,0,0,.9);
-  }
-  .cover-top .cover-text h3 {
-    margin: 8px 0;
-    font-size: clamp(14px, 2vw, 28px);
-    font-weight: 600;
-    text-shadow: 0 8px 4px rgba(0,0,0,.8), 0 0 25px rgba(0,0,0,.9);
-  }
-  @media (max-width:720px) {
-    .cover-top .cover-text { padding: 22px; }
-    .cover-top .cover-text h1 { font-size: 26px; }
-    .cover-top .cover-text h3 { font-size: 15px; }
-  }
+<style>
+
+   /* 顶部全屏 hero（文档流，页面向下滚动会离开） */
+   .site-hero {
+     width: 100%;
+     height: 100vh;            /* 占满一个视口高度 */
+     position: relative;       /* 文档流中的块 */
+     overflow: hidden;
+     display: block;
+     background: #000;         /* 加载前背景色 */
+   }
+   .site-hero img {
+     position: absolute;
+     inset: 0;
+     width: 100%;
+     height: 100%;
+     object-fit: cover;        /* 保持比例并裁切以填满 */
+     object-position: center;
+     display: block;
+     z-index: 0;
+   }
+   /* 在图片之上的文案容器（垂直居中）*/
+   .cover-top {
+     position: relative; /* 在文档流里（non-fixed）*/
+     z-index: 2;         /* 高于图片 */
+     width: 100%;
+     height: 100%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 24px;
+     box-sizing: border-box;
+     pointer-events: none; /* 让下滚操作更流畅 */
+   }
+   .cover-top .cover-text {
+     pointer-events: auto; /* 需要交互时打开 */
+     max-width: 1100px;
+     width: calc(100% - 48px);
+     background: rgba(0,0,0,0.5);
+     color: #fff;
+     padding: 36px;
+     border-radius: 8px;
+     text-align: center;
+     box-shadow: 0 12px 40px rgba(0,0,0,.45);
+     backdrop-filter: blur(2px);
+   }
+   .cover-top .cover-text h1 { margin:0 0 12px; font-size: clamp(26px,4vw,48px); line-height:1.05; }
+   .cover-top .cover-text h3 { margin:6px 0; font-size: clamp(14px,2vw,28px); font-weight:600; }
+   @media (max-width:720px) {
+     .cover-top .cover-text { padding: 20px; }
+     .cover-top .cover-text h1 { font-size: 26px; }
+   }
     /* 提高 header / main / footer 层的 z-index 使其在背景之上 */
     header.site-header,
     main.page-content,
@@ -695,27 +685,20 @@ window.onload = wrap_img;
   </style>
 </head>
 <body>
-<!-- 顶部全屏图片（在文档流里，会被向上滚出，滚动进入正文） -->
+<!-- 文档流中的全屏 hero：图片 + 文字层（打开页面时可见，向下滚动会离开） -->
 <section class="site-hero" aria-hidden="false">
   <img src="images/cover.jpg" alt="封面图 — 替换为你的图片路径">
-</section>
-<!-- 新增：在图片之上展示的可滚动文案区（打开页面时可见，向下滚动进入正文） -->
-<section class="cover-top" aria-hidden="false">
-  <div class="cover-text" role="banner">
-    <h1 class="h1_home">🔒 Lock-LLM: Prevent Unauthorized Knowledge Use from LLMs</h1>
-
-    <h3 class="h3_home" style="color:#fff;">
-      Time<a style="color:#00BFA6"><sup>†</sup></a>: Dec. 6 Sat. 9 a.m. PST<br>
-      Location: Upper Level Room 1AB
-    </h3>
-
-    <h3 class="h3_home" style="color:#fff;">
-      <a style="color:#fff" href="https://neurips.cc/" target="_blank"><b>NeurIPS 2025</b></a> Workshop
-    </h3>
-
-    <h3 class="h3_home" style="color:#00BFA6; font-weight:700; font-style:italic; font-size:40px;">
-      <sup style="font-style: normal">†</sup> Join our all-day happy hour w. snacks &amp; drinks!
-    </h3>
+  <div class="cover-top" aria-hidden="false">
+    <div class="cover-text" role="banner">
+      <h1 class="h1_home">🔒 Lock-LLM: Prevent Unauthorized Knowledge Use from LLMs</h1>
+      <h3 class="h3_home" style="color:#fff;">
+        Time<a style="color:#00BFA6"><sup>†</sup></a>: Dec. 6 Sat. 9 a.m. PST<br>Location: Upper Level Room 1AB
+      </h3>
+      <h3 class="h3_home" style="color:#fff;"><a style="color:white" href="https://neurips.cc/" target="_blank"><b>NeurIPS 2025</b></a> Workshop</h3>
+      <h3 class="h3_home" style="color:#00BFA6;font-weight:700;font-style:italic;font-size:40px;">
+        <sup style="font-style: normal">†</sup>Join our all-day happy hour w. snacks &amp; drinks !
+      </h3>
+    </div>
   </div>
 </section>
   
