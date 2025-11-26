@@ -711,13 +711,6 @@ window.onload = wrap_img;
     height: 120px;
     display: block;
     object-fit: contain;
-    /* 可加一点动画效果（非必须）*/
-    animation: preloader-pulse 1.2s linear infinite;
-  }
-  @keyframes preloader-pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.03); opacity: 0.9; }
-    100% { transform: scale(1); opacity: 1; }
   }
 </style>
 
@@ -732,7 +725,7 @@ window.onload = wrap_img;
 
 <!-- 文档流中的全屏 hero：图片 + 文字层（打开页面时可见，向下滚动会离开） -->
 <section class="site-hero" aria-hidden="false">
-  <img src="images/cover.jpg" alt="封面图 — 替换为你的图片路径">
+  <img src="images/cover.jpg" alt="Dubai_photo">
   <div class="cover-top" aria-hidden="false">
     <div class="cover-text" role="banner">
       <h1 class="h1_home">Trustworthy Foundation Models for Web Intelligence: Causal Perspectives and Challenges</h1>
