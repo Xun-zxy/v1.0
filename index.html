@@ -683,8 +683,48 @@ window.onload = wrap_img;
       z-index: 5;
     }
   </style>
+
+<!-- 等待封面图片加载再展示页面 - preload -->
+<style>
+  /* 全屏预加载遮罩 */
+  #preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000; /* 可用与图片配色一致的颜色 */
+    transition: opacity .45s ease, visibility .45s;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+  #preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  /* 可选：简单 spinner */
+  #preloader .spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    border: 5px solid rgba(255,255,255,0.12);
+    border-top-color: rgba(255,255,255,0.9);
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
 </head>
 <body>
+
+<!-- 页面进入前的遮罩：等 hero 图片加载完再 fade out -->
+<div id="preloader" aria-hidden="false">
+  <div class="spinner" aria-hidden="true"></div>
+</div>
+
 <!-- 文档流中的全屏 hero：图片 + 文字层（打开页面时可见，向下滚动会离开） -->
 <section class="site-hero" aria-hidden="false">
   <img src="images/cover.jpg" alt="封面图 — 替换为你的图片路径">
