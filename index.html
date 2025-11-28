@@ -720,10 +720,11 @@ window.onload = wrap_img;
     right: 0;
     width: 100%;
     z-index: 9999;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    background: rgba(236, 240, 241, 0.05);
-    transition: box-shadow .12s ease, background .12s ease;
+    -webkit-backdrop-filter: none; /* 可保留或移除 */
+    backdrop-filter: none;
+    background: rgb(236,240,241); /* 固定前：不透明 */
+    opacity: 1; /* 确保完全不透明 */
+    transition: box-shadow .12s ease, background .12s ease, opacity .12s ease;
   }
   .pin-top.pinned {
     position: fixed;
@@ -732,6 +733,8 @@ window.onload = wrap_img;
     right: 0;
     width: 100%;
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    background: rgb(236,240,241); /* 固定后：同样不透明 */
+    opacity: 1; /* 强制不透明，避免被透明化 */
   }
   /* JS 会插入占位元素，因此不需要硬编码 padding */
   main.page-content { padding-top: 10px; } 
