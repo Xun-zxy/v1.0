@@ -716,20 +716,15 @@ window.onload = wrap_img;
   /* 默认在文档流中；滚到顶部后 JS 会加 .pinned 切换为 fixed */
   .pin-top {
     position: relative;
-    box-sizing: border-box;
+    left: 0;
+    right: 0;
     width: 100%;
-    min-height: 56px;              /* 保证有高度 -> 占位可用 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
     z-index: 9999;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     background: rgba(236, 240, 241, 0.05);
     transition: box-shadow .12s ease, background .12s ease;
   }
-  /* 当滚动到顶部时变 fixed（JS 会添加 .pinned 并插入 .pin-top-placeholder） */
   .pin-top.pinned {
     position: fixed;
     top: 0;
@@ -737,43 +732,9 @@ window.onload = wrap_img;
     right: 0;
     width: 100%;
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    will-change: transform;
-    backdrop-filter: blur(6px);
-    pointer-events: auto;
-  }
-  /* 显式声明占位元素样式（JS 插入） */
-  .pin-top-placeholder {
-    display: block;
-    width: 100%;
-  }
-  /* pinned 时把 site-title / site-nav 定位到视口左右 20% */
-  .pin-top.pinned .site-title {
-    position: absolute;
-    left: 20%;
-    top: 50%;
-    transform: translateY(-50%);
-    float: none;
-    z-index: 10001;
-  }
-  .pin-top.pinned .site-nav {
-    position: absolute;
-    right: 20%;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10001;
-  }
-  /* 移动端回退：小屏幕不要用绝对定位，避免遮挡或布局溢出 */
-  @media (max-width: 1000px) {
-    .pin-top.pinned .site-title,
-    .pin-top.pinned .site-nav {
-      position: static;
-      transform: none;
-      left: auto;
-      right: auto;
-    }
-    .pin-top.pinned { padding: 0 12px; }
   }
   /* JS 会插入占位元素，因此不需要硬编码 padding */
+  main.page-content { padding-top: 10px; } 
 </style>
 
 </head>
