@@ -711,6 +711,24 @@ window.onload = wrap_img;
   }
 </style>
 
+<style>
+  /* 固定到视口顶部 — 如果想「到达顶部后才固定」，把 position: fixed 换为 position: sticky */
+  .pin-top {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;         /* 必要时调大，确保在最顶层 */
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.85); /* 可改为 transparent 或其他 */
+  }
+  /* 防止固定元素遮挡正文：根据固定元素高度调整下面元素的 padding-top */
+  /* 假设 pin-top 高度约 100px，下面把 page-content 推下 100px（按实际高度调整） */
+  main.page-content { padding-top: 100px; } 
+</style>
+
 </head>
 <body>
 
@@ -788,7 +806,8 @@ window.onload = wrap_img;
   
   <div id="MathJax_Message" style="display: none;"></div><header class="site-header">
 
-  <div class="wrapper"><a class="site-title" rel="author" href="hhttps://xun-zxy.github.io/v1.0/">WWW 2026 Workshop - Trustworthy Foundation Models for Web Intelligence: Causal
+  <div class="pin-top">
+    <a class="site-title" rel="author" href="https://xun-zxy.github.io/v1.0/">WWW 2026 Workshop - Trustworthy Foundation Models for Web Intelligence: Causal
 Perspectives and Challenges</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger">
         <label for="nav-trigger">
