@@ -712,20 +712,27 @@ window.onload = wrap_img;
 </style>
 
 <style>
-  /* 固定到视口顶部 — 如果想「到达顶部后才固定」，把 position: fixed 换为 position: sticky */
+  /* 默认在文档流中；滚到顶部后 JS 会加 .pinned 切换为 fixed */
   .pin-top {
-    position: sticky;
-    top: 0;
+    position: relative;
     left: 10%;
     right: 10%;
     width: 80%;
-    z-index: 9999;         /* 必要时调大，确保在最顶层 */
+    z-index: 9999;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    background: rgba(200, 200, 200, 0.95); /* 可改为 transparent 或其他 */
+    background: rgba(200, 200, 200, 0.95);
+    transition: box-shadow .12s ease;
   }
-  /* 防止固定元素遮挡正文：根据固定元素高度调整下面元素的 padding-top */
-  /* 假设 pin-top 高度约 100px，下面把 page-content 推下 100px（按实际高度调整） */
+  .pin-top.pinned {
+    position: fixed;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    width: 70%;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+  /* JS 会插入占位元素，因此不需要硬编码 padding */
   main.page-content { padding-top: 10px; } 
 </style>
 
@@ -820,6 +827,45 @@ window.onload = wrap_img;
         <div class="trigger"><a class="page-link" href="cfp/">Call for Paper</a><a class="page-link" href="invited/">Invited Speakers</a><a class="page-link" href="organizers/">Organizers</a><a class="page-link" href="/categories/">Tags</a></div>
       </nav></div>
 </header>
+
+<script>
+  // 到达顶部后把 .pin-top 切换为 fixed，并插占位防止布局抖动
+  (function(){
+    const pin = document.querySelector('.pin-top');
+    if (!pin) return;
+    // 占位（插入并移除）
+    const placeholder = document.createElement('div');
+    placeholder.className = 'pin-top-placeholder';
+    const updatePlaceholder = () => {
+      placeholder.style.height = pin.getBoundingClientRect().height + 'px';
+    };
+    let pinned = false;
+    const onScroll = () => {
+      const top = pin.getBoundingClientRect().top;
+      if (top <= 0 && !pinned) {
+        updatePlaceholder();
+        pin.parentNode.insertBefore(placeholder, pin); // 保持原位置高度
+        pin.classList.add('pinned');
+        pinned = true;
+      } else if (window.scrollY === 0 && pinned) {
+        // 回到顶部时恢复
+        pin.classList.remove('pinned');
+        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+        pinned = false;
+      } else if (pinned && window.scrollY < (pin.offsetTop || 0)) {
+        // 防止在某些布局下粘性被打断
+        pin.classList.remove('pinned');
+        if (placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+        pinned = false;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => pinned && updatePlaceholder());
+    // 初始化（页面刷新时）
+    setTimeout(onScroll, 30);
+  })();
+</script>
+
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
         <div class="home"><h1 id="Trustworthy-Foundation-Models-for-Web-Intelligence:-Causal-Perspectives-and-Challenges"><strong>Trustworthy Foundation Models for Web Intelligence: Causal
