@@ -719,29 +719,23 @@ window.onload = wrap_img;
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 99999 !important; /* 提高优先层级，确保在最上层 */
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    filter: none !important;
-    background-color: rgb(236,240,241) !important; /* 固定前：完全不透明 */
-    background: rgb(236,240,241) !important;
-    opacity: 1 !important; /* 强制不透明 */
+    z-index: 9999;
+    -webkit-backdrop-filter: none; /* 可保留或移除 */
+    backdrop-filter: none;
+    background: rgb(236,240,241); /* 固定前：不透明 */
+    opacity: 1; /* 确保完全不透明 */
     transition: box-shadow .12s ease, background .12s ease, opacity .12s ease;
   }
   .pin-top.pinned {
-    position: fixed !important;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    background-color: rgb(236,240,241) !important; /* 固定后：同样不透明 */
-    background: rgb(236,240,241) !important;
-    opacity: 1 !important;
-    filter: none !important;
- }
-  /* 防止子节点继承到透明度 */
-  .pin-top, .pin-top * { opacity: 1 !important; }
+    background: rgb(236,240,241); /* 固定后：同样不透明 */
+    opacity: 1; /* 强制不透明，避免被透明化 */
+  }
   /* JS 会插入占位元素，因此不需要硬编码 padding */
   main.page-content { padding-top: 10px; } 
 </style>
