@@ -714,19 +714,19 @@ window.onload = wrap_img;
 <style>
   /* 固定到视口顶部 — 如果想「到达顶部后才固定」，把 position: fixed 换为 position: sticky */
   .pin-top {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    width: 100%;
+    width: 80%;
     z-index: 9999;         /* 必要时调大，确保在最顶层 */
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    background: rgba(255,255,255,0.85); /* 可改为 transparent 或其他 */
+    background: rgba(255, 255, 255, 0.65); /* 可改为 transparent 或其他 */
   }
   /* 防止固定元素遮挡正文：根据固定元素高度调整下面元素的 padding-top */
   /* 假设 pin-top 高度约 100px，下面把 page-content 推下 100px（按实际高度调整） */
-  main.page-content { padding-top: 100px; } 
+  main.page-content { padding-top: 1000px; } 
 </style>
 
 </head>
