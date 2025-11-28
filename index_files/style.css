@@ -627,21 +627,34 @@ pre code { font-size: 15px !important }
 p code { font-size: 19px }
 
 /* 标题 / 导航在 pin-top 固定时的定位支持（确保在大屏可见且居中） */
-.pin-top .site-title {
-  transition: left .12s ease, transform .12s ease;
-}
-.pin-top .site-nav {
-  transition: right .12s ease, transform .12s ease;
+.pin-top-placeholder {
+  display: block;
+  width: 100%;
 }
 
-/* 可选：如果你想 site-title 在大屏幕时有固定宽度 / 对齐，也可以调整这里 */
-@media (min-width: 1000px) {
-  .site-title { /* 保证未 pinned 时仍在左侧展示 */
-    float: left;
-    margin-left: 0;
-  }
-  .site-nav { /* 未 pinned 的默认右侧位置 (退回到已有样式) */
-    right: 15px;
-  }
+/* 快速过渡、兼容 */
+.pin-top { transition: background .12s ease, box-shadow .12s ease, transform .12s ease; }
+.pin-top .site-title { transition: left .12s ease, transform .12s ease; }
+.pin-top .site-nav { transition: right .12s ease, transform .12s ease; }
+
+/* pinned 时确保占满视口顶部且元素层级正常 */
+.pin-top.pinned {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
 }
-/* ...existing code... */
+
+/* 小屏回退（同上）*/
+@media (max-width: 1000px) {
+  .pin-top.pinned .site-title,
+  .pin-top.pinned .site-nav {
+    position: static;
+    transform: none;
+    left: auto;
+    right: auto;
+  }
+  .pin-top.pinned { padding: 0 12px; }
+}
